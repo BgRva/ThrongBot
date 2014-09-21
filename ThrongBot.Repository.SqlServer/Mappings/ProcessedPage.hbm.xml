@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="ThrongBot.Common"
+                   namespace="ThrongBot.Common.Entities">
+
+    <class name="ProcessedPage">
+        <id name="Id">
+            <generator class="guid.comb"/>
+        </id>
+        <property name="CrawlerId" />
+        <property name="SessionId" />
+        <property name="PageUrl" />
+        <property name="Title" />
+        <property name="Description" />
+        <property name="KeyWords" />
+        <property name="StatusCode" />
+    </class>
+</hibernate-mapping>

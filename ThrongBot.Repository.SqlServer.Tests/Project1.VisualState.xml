@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="false">
+  <TopNode>[0-1000]C:\_dev\crawler\DomainCrawler\DomainCrawler.Repository.SqlServer.Tests\Project1.nunit</TopNode>
+  <SelectedNode>[0-1002]DomainCrawler.Repository.SqlServer.Tests.SchemaTest.CanGenerateSchema</SelectedNode>
+  <ExcludeCategories>false</ExcludeCategories>
+  <Nodes>
+    <Node UniqueName="[0-1000]C:\_dev\crawler\DomainCrawler\DomainCrawler.Repository.SqlServer.Tests\Project1.nunit" Expanded="true" />
+    <Node UniqueName="[0-1003]C:\_dev\crawler\DomainCrawler\DomainCrawler.Repository.SqlServer.Tests\bin\Debug\DomainCrawler.Repository.SqlServer.Tests.dll" Expanded="true" />
+    <Node UniqueName="[0-1004]DomainCrawler" Expanded="true" />
+    <Node UniqueName="[0-1005]DomainCrawler.Repository" Expanded="true" />
+    <Node UniqueName="[0-1006]DomainCrawler.Repository.SqlServer" Expanded="true" />
+    <Node UniqueName="[0-1007]DomainCrawler.Repository.SqlServer.Tests" Expanded="true" />
+    <Node UniqueName="[0-1001]DomainCrawler.Repository.SqlServer.Tests.SchemaTest" Expanded="true" />
+  </Nodes>
+</VisualState>

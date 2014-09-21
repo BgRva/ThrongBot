@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="C:\_dev\crawler\DomainCrawler\DomainCrawler.Repository.SqlServer.Tests\Project1.nunit" total="1" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2014-09-02" time="17:45:15">
+  <environment nunit-version="2.6.3.13283" clr-version="2.0.50727.5483" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="C:\Program Files (x86)\NUnit 2.6.3\bin" machine-name="FRY" user="Michael Pastore" user-domain="Fry" />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite type="Project" name="C:\_dev\crawler\DomainCrawler\DomainCrawler.Repository.SqlServer.Tests\Project1.nunit" executed="True" result="Success" success="True" time="1.954" asserts="0">
+    <results>
+      <test-suite type="Assembly" name="C:\_dev\crawler\DomainCrawler\DomainCrawler.Repository.SqlServer.Tests\bin\Debug\DomainCrawler.Repository.SqlServer.Tests.dll" executed="True" result="Success" success="True" time="1.932" asserts="0">
+        <results>
+          <test-suite type="Namespace" name="DomainCrawler" executed="True" result="Success" success="True" time="1.932" asserts="0">
+            <results>
+              <test-suite type="Namespace" name="Repository" executed="True" result="Success" success="True" time="1.932" asserts="0">
+                <results>
+                  <test-suite type="Namespace" name="SqlServer" executed="True" result="Success" success="True" time="1.931" asserts="0">
+                    <results>
+                      <test-suite type="Namespace" name="Tests" executed="True" result="Success" success="True" time="1.931" asserts="0">
+                        <results>
+                          <test-suite type="TestFixture" name="SchemaTest" executed="True" result="Success" success="True" time="1.928" asserts="0">
+                            <results>
+                              <test-case name="DomainCrawler.Repository.SqlServer.Tests.SchemaTest.CanGenerateSchema" executed="True" result="Success" success="True" time="1.910" asserts="0" />
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

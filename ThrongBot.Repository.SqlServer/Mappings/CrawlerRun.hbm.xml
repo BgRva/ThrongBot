@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="ThrongBot.Common"
+                   namespace="ThrongBot.Common.Entities">
+
+  <class name="CrawlerRun">
+    <id name="Id">
+        <generator class="guid.comb"/>
+    </id>
+    <property name="CrawlerId" />
+    <property name="SessionId" />
+    <property name="SeedUrl" />
+    <property name="BaseDomain" />
+    <property name="StartTime" />
+    <property name="EndTime" />
+    <property name="Depth" />
+    <property name="CrawledCount" />
+    <property name="InProgress" />
+    <property name="ErrorOccurred" />
+  </class>
+</hibernate-mapping>
+
+

@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="ThrongBot.Common"
+                   namespace="ThrongBot.Common.Entities">
+
+    <class name="CrawledLink">
+        <id name="Id">
+            <generator class="guid.comb"/>
+        </id>
+        <property name="SessionId" />
+        <property name="CrawlerId" />
+        <property name="SourceUrl" />
+        <property name="TargetUrl" />
+        <property name="StatusCode" />
+        <property name="ErrorOccurred" />
+        <property name="Exception" />
+        <property name="IsRoot" />
+        <property name="Bypassed" />
+        <property name="CrawlDepth" />
+    </class>
+</hibernate-mapping>

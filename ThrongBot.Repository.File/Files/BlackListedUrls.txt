@@ -1,0 +1,6 @@
+﻿google.com
+twitter.com
+yahoo.com
+bing.com
+linkedin.com
+redit.com

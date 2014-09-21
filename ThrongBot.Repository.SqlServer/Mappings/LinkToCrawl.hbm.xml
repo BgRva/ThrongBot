@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="ThrongBot.Common"
+                   namespace="ThrongBot.Common.Entities">
+
+    <class name="LinkToCrawl">
+        <id name="Id">
+            <generator class="guid.comb"/>
+        </id>
+        <property name="SessionId" />
+        <property name="InProgress" />
+        <property name="TargetBaseDomain" />
+        <property name="SourceUrl" />
+        <property name="TargetUrl" />
+        <property name="CrawlDepth" />
+        <property name="IsRoot" />
+        <property name="IsInternal" />
+    </class>
+</hibernate-mapping>
