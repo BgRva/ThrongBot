@@ -125,7 +125,7 @@ namespace ThrongBot.Repository.SqlServer
         }
         public void DeleteCrawl(Guid id)
         {
-            var query = string.Format("DELETE FROM [Crawler].[dbo].[CrawlerRun] WHERE [Id] = '{0}';",
+            var query = string.Format("DELETE FROM [CrawlerRun] WHERE [Id] = '{0}';",
                                id);
 
             using (var connection = new SqlConnection(_connStr))
@@ -211,7 +211,7 @@ namespace ThrongBot.Repository.SqlServer
         }
         public void DeleteProcessedPage(Guid id)
         {
-            var query = string.Format("DELETE FROM [Crawler].[dbo].[ProcessedPage] WHERE [Id] = '{0}';",
+            var query = string.Format("DELETE FROM [ProcessedPage] WHERE [Id] = '{0}';",
                                id);
 
             using (var connection = new SqlConnection(_connStr))
@@ -276,7 +276,7 @@ namespace ThrongBot.Repository.SqlServer
         }
         public void DeleteCrawledLink(Guid id)
         {
-            var query = string.Format("DELETE FROM [Crawler].[dbo].[CrawledLink] WHERE [Id] = '{0}';",
+            var query = string.Format("DELETE FROM [CrawledLink] WHERE [Id] = '{0}';",
                        id);
 
             using (var connection = new SqlConnection(_connStr))
@@ -382,7 +382,7 @@ namespace ThrongBot.Repository.SqlServer
         }
         public void DeleteLinkToCrawl(Guid id)
         {
-            var query = string.Format("DELETE FROM [Crawler].[dbo].[LinkToCrawl] WHERE [Id] = '{0}';",
+            var query = string.Format("DELETE FROM [LinkToCrawl] WHERE [Id] = '{0}';",
                id);
 
             using (var connection = new SqlConnection(_connStr))
@@ -394,7 +394,7 @@ namespace ThrongBot.Repository.SqlServer
         }
         public void DeleteLinkToCrawl(int sessionId, string srcUrl, string targetUrl)
         {
-            var query = string.Format("DELETE FROM [Crawler].[dbo].[LinkToCrawl] WHERE [SessionId] = {0} AND [SourceUrl] = '{1}' AND [TargetUrl] = '{2}';",
+            var query = string.Format("DELETE FROM [LinkToCrawl] WHERE [SessionId] = {0} AND [SourceUrl] = '{1}' AND [TargetUrl] = '{2}';",
                                       sessionId, srcUrl.Trim(), targetUrl.Trim());
 
             using (var connection = new SqlConnection(_connStr))
@@ -467,7 +467,7 @@ namespace ThrongBot.Repository.SqlServer
 
             if (result != null && markAsInProgress)
             {
-                var query = string.Format("UPDATE [Crawler].[dbo].[LinkToCrawl] SET [InProgress] = 1 WHERE [Id] = '{0}';",
+                var query = string.Format("UPDATE [LinkToCrawl] SET [InProgress] = 1 WHERE [Id] = '{0}';",
                                            result.Id);
 
                 using (var connection = new SqlConnection(_connStr))
@@ -515,7 +515,7 @@ namespace ThrongBot.Repository.SqlServer
 
         public void AddBlacklisted(string url)
         {
-            var query = string.Format("INSERT INTO [Crawler].[dbo].[BlackList] ([Url]) VALUES ('{0}')", url.Trim());
+            var query = string.Format("INSERT INTO [BlackList] ([Url]) VALUES ('{0}')", url.Trim());
 
             using (var connection = new SqlConnection(_connStr))
             {

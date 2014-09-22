@@ -35,6 +35,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		ToDo.txt = ToDo.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Databases", "Databases", "{82CAFCFE-523A-4BD7-8593-838F81634CC8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlExpress2008R2", "SqlExpress2008R2", "{66B0201C-5395-48EE-A3FB-0789B056CB93}"
+	ProjectSection(SolutionItems) = preProject
+		Databases\SqlExpress2008R2\Create_ThrongBot_Database.sql = Databases\SqlExpress2008R2\Create_ThrongBot_Database.sql
+		Databases\SqlExpress2008R2\Create_ThrongBot_Entities.sql = Databases\SqlExpress2008R2\Create_ThrongBot_Entities.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,5 +113,6 @@ Global
 		{0AA65BF5-8BD8-4AA6-9A31-6E82248EBB77} = {37F4D214-6042-41D5-A511-0089F96B2C11}
 		{F33D6C38-1631-4172-ABFF-85F3009205EC} = {37F4D214-6042-41D5-A511-0089F96B2C11}
 		{FBBF4CD7-2761-4E77-A105-7210CBEB78C0} = {37F4D214-6042-41D5-A511-0089F96B2C11}
+		{66B0201C-5395-48EE-A3FB-0789B056CB93} = {82CAFCFE-523A-4BD7-8593-838F81634CC8}
 	EndGlobalSection
 EndGlobal

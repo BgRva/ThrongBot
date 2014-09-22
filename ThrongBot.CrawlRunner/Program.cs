@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using ThrongBot.Repository.SqlServer;
 using System.Configuration;
 
+[assembly: log4net.Config.XmlConfigurator(Watch = true)]
+
 namespace ThrongBot.CrawlRunner
 {
     class Program
