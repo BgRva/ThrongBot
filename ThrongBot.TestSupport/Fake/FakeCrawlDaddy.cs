@@ -16,6 +16,7 @@ namespace ThrongBot.TestSupport
         public int CrawlerId { get; private set; }
         public Uri Seed { get; private set; }
         public string BaseDomain { get; private set; }
+        public bool IsAsync { get; set; }
 
         public bool InitializeCrawler(string seedUrl, int sessionId, int crawlerId)
         {
@@ -25,7 +26,6 @@ namespace ThrongBot.TestSupport
             BaseDomain = Seed.GetBaseDomain();
             return true;
         }
-
         public void StartCrawl()
         {
             OnDomainCrawlStarted(new CrawlerRun() {CrawlerId = CrawlerId});

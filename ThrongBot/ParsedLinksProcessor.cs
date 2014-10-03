@@ -31,6 +31,7 @@ namespace ThrongBot
             _provider = null;
         }
         #endregion
+
         public void ProcessLinks(Abot.Poco.CrawledPage page)
         {
             if (page.ParsedLinks == null || page.ParsedLinks.Count() == 0)

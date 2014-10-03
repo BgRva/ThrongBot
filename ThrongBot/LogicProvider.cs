@@ -7,6 +7,10 @@ using ThrongBot.Common;
 
 namespace ThrongBot
 {
+    /// <summary>
+    /// A factory class that can be injected into instances of CrawlDaddy which
+    /// calls it as needed.
+    /// </summary>
     public class LogicProvider : ILogicProvider
     {
         public T GetInstanceOf<T>() where T : ILogic

@@ -62,10 +62,12 @@ namespace ThrongBot
         {
             if (page == null)
                 throw new ArgumentNullException("page");
-            _logger.DebugFormat("Add(page): Target: {0}, Source: {1}, Root: {2}",
-                page.Uri.AbsoluteUri,
-                page.ParentUri.AbsoluteUri,
-                page.IsRoot);
+
+            //_logger.DebugFormat("Add(page): Target: {0}, Source: {1}, Root: {2}",
+            //    page.Uri.AbsoluteUri,
+            //    page.ParentUri.AbsoluteUri,
+            //    page.IsRoot);
+
             page.PageBag.SessionId = SessionId;
             page.PageBag.CrawlerId = CrawlerId;
             using (var factory = _provider.GetInstanceOf<IModelFactory>())
@@ -85,10 +87,11 @@ namespace ThrongBot
                 LinkToCrawl link = null;
                 foreach(var page in pages)
                 {
-                    _logger.DebugFormat("Add(pages): Target: {0}, Source: {1}, Root: {2}",
-                        page.Uri.AbsoluteUri,
-                        page.ParentUri.AbsoluteUri,
-                        page.IsRoot);
+                    //_logger.DebugFormat("Add(pages): Target: {0}, Source: {1}, Root: {2}",
+                    //    page.Uri.AbsoluteUri,
+                    //    page.ParentUri.AbsoluteUri,
+                    //    page.IsRoot);
+
                     link = factory.ConvertToLinkToCrawl(page, SessionId);
                     links.Add(link);
                 }
@@ -120,9 +123,6 @@ namespace ThrongBot
             // that has not been crawled, see RecordCrawledUri() as well
             // for more info
             var linkToCrawl = _repo.GetNextLinkToCrawl(sessionId, BaseDomain, true);
-            
-            _logger.DebugFormat("_repo.GetNextLinkToCrawl(): Target: {0}, Source: {1}, Root: {2}", 
-                                linkToCrawl.TargetUrl, linkToCrawl.SourceUrl, linkToCrawl.IsRoot);
 
             if (linkToCrawl != null)
             {
@@ -136,6 +136,11 @@ namespace ThrongBot
                     page.ParentUri.AbsoluteUri,
                     page.IsRoot);
             }
+            else
+            {
+                _logger.DebugFormat("_repo.GetNextLinkToCrawl() returned null for: sessionId: {0}, BaseDomain: {1}, true",
+                                    sessionId, BaseDomain);
+            }
             
             return page;
         }
@@ -145,6 +150,7 @@ namespace ThrongBot
                                 crawledLink.TargetUrl,
                                 crawledLink.SourceUrl,
                                 crawledLink.IsRoot);
+
             // record the crawled link
             _repo.AddCrawledLink(crawledLink, true);
 
@@ -159,10 +165,11 @@ namespace ThrongBot
             if (link == null)
                 throw new ArgumentNullException("link");
 
-            _logger.DebugFormat("AddLinkToCrawl(): Target: {0}, Source: {1}, Root: {2}",
-                                link.TargetUrl,
-                                link.SourceUrl,
-                                link.IsRoot);
+            //_logger.DebugFormat("AddLinkToCrawl(): Target: {0}, Source: {1}, Root: {2}",
+            //                    link.TargetUrl,
+            //                    link.SourceUrl,
+            //                    link.IsRoot);
+
             AddLinkToCrawlUnique(_repo, link);
         }
 
@@ -173,17 +180,19 @@ namespace ThrongBot
 
             foreach (var link in links)
             {
-                _logger.DebugFormat("AddLinksToCrawl(): Target: {0}, Source: {1}, Root: {2}",
-                                    link.TargetUrl,
-                                    link.SourceUrl,
-                                    link.IsRoot);
+                //_logger.DebugFormat("AddLinksToCrawl(): Target: {0}, Source: {1}, Root: {2}",
+                //                    link.TargetUrl,
+                //                    link.SourceUrl,
+                //                    link.IsRoot);
+
                 AddLinkToCrawlUnique(_repo, link);
             }
         }
 
         public bool ProcessParsedLinks(CrawledPage page)
         {
-            _logger.DebugFormat("links parsed from crawled page: {0}", ConcatUris(page.ParsedLinks));
+            //_logger.DebugFormat("links parsed from crawled page: {0}", ConcatUris(page.ParsedLinks));
+
             // Before saving any links to crawl, process them to remove duplicates
             // and avoid black listed sites
             using (var linksProcessor = _provider.GetInstanceOf<ILinksProcessor>())

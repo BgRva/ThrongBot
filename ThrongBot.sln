@@ -41,6 +41,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlExpress2008R2", "SqlExpr
 	ProjectSection(SolutionItems) = preProject
 		Databases\SqlExpress2008R2\Create_ThrongBot_Database.sql = Databases\SqlExpress2008R2\Create_ThrongBot_Database.sql
 		Databases\SqlExpress2008R2\Create_ThrongBot_Entities.sql = Databases\SqlExpress2008R2\Create_ThrongBot_Entities.sql
+		Databases\SqlExpress2008R2\Populate_ThrongBot_BlackList_Table.sql = Databases\SqlExpress2008R2\Populate_ThrongBot_BlackList_Table.sql
 	EndProjectSection
 EndProject
 Global

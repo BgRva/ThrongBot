@@ -23,7 +23,12 @@ namespace ThrongBot.Repository.SqlServer.TestApp
         {
             ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["SqlServerRepository"].ConnectionString;
 
-            Console.WriteLine("WARNING: Will Clear DB Before Tests!  (X to continue) ...");
+            Console.WriteLine("***********************************");
+            Console.WriteLine("************* WARNING !!!**********");
+            Console.WriteLine("***********************************");
+            Console.WriteLine("This test app will clear the database before running tests!  (X to continue) ...");
+            Console.WriteLine();
+
             var key = Console.ReadKey();
             if (key.Key == ConsoleKey.X)
             {

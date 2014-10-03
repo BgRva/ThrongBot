@@ -6,9 +6,13 @@ using Abot.Poco;
 using ThrongBot.Common;
 using ThrongBot.Common.Entities;
 using log4net;
+using Abot.Core;
 
 namespace ThrongBot
 {
+    /// <summary>
+    /// This class is a wrapper around an instance of Abot
+    /// </summary>
     public class CrawlDaddy : ICrawlDaddy
     {
         static ILog _logger = LogManager.GetLogger(typeof(CrawlDaddy).FullName);
@@ -41,10 +45,20 @@ namespace ThrongBot
 
             if (_crawler != null)
             {
-                _crawler.PageCrawlStartingAsync -= crawler_ProcessPageCrawlStarting;
-                _crawler.PageCrawlCompletedAsync -= crawler_ProcessPageCrawlCompleted;
-                _crawler.PageCrawlDisallowedAsync -= crawler_PageCrawlDisallowed;
-                _crawler.PageLinksCrawlDisallowedAsync -= crawler_PageLinksCrawlDisallowed;
+                if (IsAsync)
+                {
+                    _crawler.PageCrawlStartingAsync -= crawler_ProcessPageCrawlStarting;
+                    _crawler.PageCrawlCompletedAsync -= crawler_ProcessPageCrawlCompleted;
+                    _crawler.PageCrawlDisallowedAsync -= crawler_PageCrawlDisallowed;
+                    _crawler.PageLinksCrawlDisallowedAsync -= crawler_PageLinksCrawlDisallowed;
+                }
+                else
+                {
+                    _crawler.PageCrawlStarting -= crawler_ProcessPageCrawlStarting;
+                    _crawler.PageCrawlCompleted -= crawler_ProcessPageCrawlCompleted;
+                    _crawler.PageCrawlDisallowed -= crawler_PageCrawlDisallowed;
+                    _crawler.PageLinksCrawlDisallowed -= crawler_PageLinksCrawlDisallowed;
+                }
                 _crawler = null;
             }
         }        
@@ -64,6 +78,7 @@ namespace ThrongBot
         {
             get { return CrawlerDefinition.BaseDomain; }
         }
+        public bool IsAsync { get; set; }
 
         public event EventHandler<ExternalLinksFoundEventArgs> ExternalLinksFound;
         #region OnExternalLinksFound
@@ -174,79 +189,29 @@ namespace ThrongBot
         /// <param name="crawlerId"></param>
         public bool InitializeCrawler(string seedUrl, int sessionId, int crawlerId)
         {
-            // load the crawl configuration
-            _config = new CrawlConfiguration();
-            _config.CrawlTimeoutSeconds = 100;
-            _config.MaxConcurrentThreads = 1;
-            _config.MaxPagesToCrawl = 20;
-            _config.IsExternalPageCrawlingEnabled = false;
-            _config.IsExternalPageLinksCrawlingEnabled = false;
-            _config.MinCrawlDelayPerDomainMilliSeconds = 3000;
-            _config.DownloadableContentTypes = "text/html, text/plain";
-            _config.IsHttpRequestAutoRedirectsEnabled = true;
-            _config.IsUriRecrawlingEnabled = false;
-            _config.UserAgentString = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0";
-
-            #region Old _config stuff
-            //public long CrawlTimeoutSeconds { get; set; }
-            //public string DownloadableContentTypes { get; set; }
-            //public int HttpRequestMaxAutoRedirects { get; set; }
-            //public int HttpRequestTimeoutInSeconds { get; set; }
-            //public int HttpServicePointConnectionLimit { get; set; }
-            //public bool IsExternalPageCrawlingEnabled { get; set; }
-            //public bool IsExternalPageLinksCrawlingEnabled { get; set; }
-            //public bool IsForcedLinkParsingEnabled { get; set; }
-            //public bool IsHttpRequestAutomaticDecompressionEnabled { get; set; }
-            //public bool IsHttpRequestAutoRedirectsEnabled { get; set; }
-            //public bool IsRespectAnchorRelNoFollowEnabled { get; set; }
-            //public bool IsRespectMetaRobotsNoFollowEnabled { get; set; }
-            //public bool IsRespectRobotsDotTextEnabled { get; set; }
-            //public bool IsUriRecrawlingEnabled { get; set; }
-            //public int MaxConcurrentThreads { get; set; }
-            //public int MaxCrawlDepth { get; set; }
-            //public int MaxMemoryUsageCacheTimeInSeconds { get; set; }
-            //public int MaxMemoryUsageInMb { get; set; }
-            //public long MaxPageSizeInBytes { get; set; }
-            //public long MaxPagesToCrawl { get; set; }
-            //public long MaxPagesToCrawlPerDomain { get; set; }
-            //public int MaxRobotsDotTextCrawlDelayInSeconds { get; set; }
-            //public int MinAvailableMemoryRequiredInMb { get; set; }
-            //public long MinCrawlDelayPerDomainMilliSeconds { get; set; }
-            //public string RobotsDotTextUserAgentString { get; set; }
-            //public string UserAgentString { get; set; } 
-            #endregion
-
-            //check if a crawl is already defined
-            var existingRun = _repo.GetCrawl(sessionId, crawlerId);
-            if (existingRun != null)
+            var config = new CrawlConfiguration();
+            var abotSection = AbotConfigurationSectionHandler.LoadFromXml();
+            if (abotSection != null)
             {
-                var mssg = string.Format("CrawlerRun exists with sessionId: {0} and crawlerId: {1}; cancelling run ...", sessionId, crawlerId);
-                _logger.Error(mssg);
-                return false;
+                config = abotSection.Convert();
+                _logger.InfoFormat("CrawlConfiguration loaded from app.config");
             }
-            Seed = new Uri(seedUrl);
-            CrawlerDefinition = new CrawlerRun()
+            else
             {
-                SessionId = sessionId,
-                SeedUrl = Seed.AbsoluteUri,
-                CrawlerId = crawlerId,
-                BaseDomain = Seed.GetBaseDomain()
-            };
-            _repo.AddCrawl(CrawlerDefinition);
-            _scheduler = new MyScheduler(new LogicProvider(), CrawlerDefinition, _repo);
+                config.CrawlTimeoutSeconds = 100;
+                config.MaxConcurrentThreads = 1;
+                config.MaxPagesToCrawl = long.MaxValue;
+                config.IsExternalPageCrawlingEnabled = false;
+                config.IsExternalPageLinksCrawlingEnabled = false;
+                config.MinCrawlDelayPerDomainMilliSeconds = 10000;
+                config.DownloadableContentTypes = "text/html, text/plain";
+                config.IsHttpRequestAutoRedirectsEnabled = true;
+                config.IsUriRecrawlingEnabled = false;
+                config.UserAgentString = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:31.0) Gecko/20100101 Firefox/31.0";
+                _logger.InfoFormat("CrawlConfiguration default loaded");
+            }
 
-            _crawler = new PoliteWebCrawler(_config, null, null, _scheduler, null, null, null, null, null);
-            _crawler.CrawlBag.SessionId = CrawlerDefinition.SessionId;
-            _crawler.CrawlBag.CrawlerId = CrawlerDefinition.CrawlerId;
-            _crawler.ShouldScheduleLink(ShouldScheduleLink);
-            _crawler.ShouldCrawlPage(ShouldCrawlPage);
-
-            _crawler.PageCrawlStartingAsync += crawler_ProcessPageCrawlStarting;
-            _crawler.PageCrawlCompletedAsync += crawler_ProcessPageCrawlCompleted;
-            _crawler.PageCrawlDisallowedAsync += crawler_PageCrawlDisallowed;
-            _crawler.PageLinksCrawlDisallowedAsync += crawler_PageLinksCrawlDisallowed;
-
-            return true;
+            return InitializeCrawler( seedUrl, sessionId, crawlerId, config);
         }
 
         public bool InitializeCrawler(string seedUrl, int sessionId, int crawlerId, CrawlConfiguration config)
@@ -278,10 +243,20 @@ namespace ThrongBot
             _crawler.ShouldScheduleLink(ShouldScheduleLink);
             _crawler.ShouldCrawlPage(ShouldCrawlPage);
 
-            _crawler.PageCrawlStartingAsync += crawler_ProcessPageCrawlStarting;
-            _crawler.PageCrawlCompletedAsync += crawler_ProcessPageCrawlCompleted;
-            _crawler.PageCrawlDisallowedAsync += crawler_PageCrawlDisallowed;
-            _crawler.PageLinksCrawlDisallowedAsync += crawler_PageLinksCrawlDisallowed;
+            if (IsAsync)
+            {
+                _crawler.PageCrawlStartingAsync += crawler_ProcessPageCrawlStarting;
+                _crawler.PageCrawlCompletedAsync += crawler_ProcessPageCrawlCompleted;
+                _crawler.PageCrawlDisallowedAsync += crawler_PageCrawlDisallowed;
+                _crawler.PageLinksCrawlDisallowedAsync += crawler_PageLinksCrawlDisallowed;
+            }
+            else
+            {
+                _crawler.PageCrawlStarting += crawler_ProcessPageCrawlStarting;
+                _crawler.PageCrawlCompleted += crawler_ProcessPageCrawlCompleted;
+                _crawler.PageCrawlDisallowed += crawler_PageCrawlDisallowed;
+                _crawler.PageLinksCrawlDisallowed += crawler_PageLinksCrawlDisallowed;
+            }
 
             return true;
         }
@@ -293,9 +268,29 @@ namespace ThrongBot
             CrawlerDefinition.InProgress = true;
             _repo.UpdateCrawl(CrawlerDefinition);
 
+
             OnDomainCrawlStarted(CrawlerDefinition);
 
+            #region log start
+
+            if (_logger.IsDebugEnabled)
+            {
+                _logger.DebugFormat("Starting crawl sessionId: {0} seed: {1}", CrawlerDefinition.SessionId, CrawlerDefinition.SeedUrl);
+            }
+
+            #endregion
+
             CrawlResult result = _crawler.Crawl(Seed, _cancelToken);
+
+            #region log start
+
+            if (_logger.IsDebugEnabled)
+            {
+                _logger.DebugFormat("Ended crawl elapsed: {0}", result.Elapsed);
+            }
+
+            #endregion
+
             CrawlerDefinition.InProgress = false;
             CrawlerDefinition.EndTime = CrawlerDefinition.StartTime.Add(result.Elapsed);
             CrawlerDefinition.ErrorOccurred = result.ErrorOccurred;

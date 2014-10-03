@@ -6,6 +6,9 @@ using ThrongBot.Common.Entities;
 
 namespace ThrongBot
 {
+    /// <summary>
+    /// A factory class which creates instances of the models
+    /// </summary>
     public class ModelFactory : IModelFactory
     {
         public void Dispose() { }

@@ -1,3 +1,5 @@
-Add restart ability
+Add restart ability:  If a crawler is stopped or errors out, the crawl definition in the repository 
+should still be flagged as "InProgress".  Additionally, you should be able to call the "next link to crawl"
+for the specified sessionId and base domain and restart the crawl.
 
 Add deployment configuration checker, a quick app to check deployment configs like database connectivity, webb service connectivity, etc.

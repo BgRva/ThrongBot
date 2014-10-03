@@ -30,15 +30,33 @@ namespace ThrongBot.CrawlRunner
             {
                 Console.Read();
                 return;
-            } 
+            }
 
             #endregion
 
-            #region Initializae
+            #region Initialize
 
             Bootstrap.Bootstrapper.Initialize(new Bootstrap.ApplicationModule());
 
             #endregion
+
+            #region Get config settings
+
+            bool abotIsAsync = false;
+            var appSetting = ConfigurationManager.AppSettings["AbotIsAsync"];
+            bool.TryParse(appSetting, out abotIsAsync);
+
+            bool canSpawn = false;
+            appSetting = ConfigurationManager.AppSettings["SpawnCrawlsWhenExternalLinksFound"];
+            bool.TryParse(appSetting, out canSpawn);
+
+            _logger.InfoFormat("AbotIsAsync: {0}", abotIsAsync);
+            _logger.InfoFormat("SpawnCrawlsWhenExternalLinksFound: {0}", canSpawn);
+            Console.WriteLine("AbotIsAsync: {0}", abotIsAsync);
+            Console.WriteLine("SpawnCrawlsWhenExternalLinksFound: {0}", canSpawn);
+
+            #endregion
+
             Console.WriteLine("Session Id: {0}", _sessionId);
             Console.WriteLine("Crawler Id: {0}", _crawlerId);
             Console.WriteLine("Seed Url:   {0}", _seedUrl);
@@ -50,14 +68,13 @@ namespace ThrongBot.CrawlRunner
                 if (!IsCrawlDefined(_sessionId, _crawlerId))
                 {
                     _inProgress = true;
-                    var crawler = CreateAndInitCrawler(_sessionId, _crawlerId, _seedUrl);
+                    var crawler = CreateAndInitCrawler( _sessionId, _crawlerId, _seedUrl, abotIsAsync, canSpawn);
                     crawler.StartCrawl();
                 }
             }
             catch (Exception e)
             {
-                _logger.Error(string.Format("Exception caught in crawl sessionId: {0} and crawlerId: {1};", _sessionId, _crawlerId), 
-                              e);
+                _logger.Error(string.Format("Exception caught in crawl sessionId: {0} and crawlerId: {1};",  _sessionId, _crawlerId), e);
                 Console.WriteLine("{0} caught and suppressed in main ...", e.Message);
             }
             //-----------------
@@ -65,11 +82,12 @@ namespace ThrongBot.CrawlRunner
             Console.Read();
         }
 
-        public static ICrawlDaddy CreateAndInitCrawler(int sessionId, int crawlerId, string seedUrl)
+        public static ICrawlDaddy CreateAndInitCrawler(int sessionId, int crawlerId, string seedUrl, bool abotIsAsync, bool canSpawnCrawls)
         {
             var daddy = Bootstrap.Bootstrapper.Resolve<ICrawlDaddy>("Live");
-            //var daddy = new TestSupport.FakeCrawlDaddy();
+            daddy.IsAsync = abotIsAsync;
             daddy.InitializeCrawler(seedUrl, sessionId, crawlerId);
+
             daddy.DomainCrawlStarted += daddy_DomainCrawlStarting;
             daddy.DomainCrawlEnded += daddy_DomainCrawlEnded;
             daddy.ExternalLinksFound += daddy_ExternalLinksFound;
@@ -83,18 +101,36 @@ namespace ThrongBot.CrawlRunner
         }
         private static void daddy_ExternalLinksFound(object sender, ExternalLinksFoundEventArgs e)
         {
-            Console.WriteLine(string.Format("External Links Found at {1}", e.CrawlerId, e.PageUri));
+            string mssg = string.Format("External Links Found at {1}", e.CrawlerId, e.PageUri);
+            Console.WriteLine(mssg);
             Console.WriteLine();
         }
         private static void daddy_DomainCrawlEnded(object sender, DomainCrawlEndedEventArgs e)
         {
             Console.WriteLine(string.Format("Crawl End Time: {0}", e.EndTime));
             Console.WriteLine();
+
+            #region log
+
+            if (_logger.IsDebugEnabled)
+            {
+                _logger.Debug(string.Format("Crawl End Time: {0}", e.EndTime));
+            }
+
+            #endregion
         }
         private static void daddy_DomainCrawlStarting(object sender, DomainCrawlStartedEventArgs e)
         {
             Console.WriteLine(string.Format("Crawl Start Time {0}", e.StartTime));
             Console.WriteLine();
+            #region log
+
+            if (_logger.IsDebugEnabled)
+            {
+                _logger.Debug(string.Format("Crawl Start Time {0}", e.StartTime));
+            }
+
+            #endregion
         }
 
         public static IRepository GetRepo()
@@ -196,17 +232,8 @@ namespace ThrongBot.CrawlRunner
 
         public static bool CanExternalCrawlBeSpawned(IRepository repo, int sessionId)
         {
+            // check config canSpawnCrawlsConfigSetting first
             bool canSpawn = false;
-            try
-            {
-                var appSetting = ConfigurationManager.AppSettings["SpawnCrawlsWhenExternalLinksFound"];
-                bool.TryParse(appSetting, out canSpawn);
-            }
-            catch (ConfigurationErrorsException)
-            {
-                //suppress
-                return canSpawn = false;
-            }
 
             int inProgress = repo.GetCountOfCrawlsInProgress(sessionId);
             if (inProgress < repo.GetSession(sessionId).MaxConcurrentCrawls)

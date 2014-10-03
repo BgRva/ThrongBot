@@ -16,6 +16,7 @@ namespace ThrongBot.Watcher.Fake
         public int CrawlerId { get; private set; }
         public Uri Seed { get; private set; }
         public string BaseDomain { get; private set; }
+        public bool IsAsync { get; set; }
 
         public bool InitializeCrawler(string seedUrl, int sessionId, int crawlerId)
         {

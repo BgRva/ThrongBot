@@ -11,10 +11,6 @@ namespace ThrongBot
 {
     public class MyCrawledPageProcessor : ICrawledPageProcessor
     {
-        public MyCrawledPageProcessor()
-        {
-        }
-
         #region IDisposable methods
 
         public void Dispose()
@@ -23,6 +19,12 @@ namespace ThrongBot
 
         #endregion
 
+        /// <summary>
+        /// Processes a crawled page and returns a ProcessedPage object
+        /// which can be stored.
+        /// </summary>
+        /// <param name="page">The results of a crawled url</param>
+        /// <returns>ProcessedPage or null</returns>
         public ProcessedPage ProcessPage(Abot.Poco.CrawledPage page)
         {
             //TODO extract data
@@ -32,9 +34,9 @@ namespace ThrongBot
             processed.PageUrl = page.Uri.AbsoluteUri;
             processed.StatusCode = page.HttpWebResponse.StatusCode;
 
-
-            var cookies = page.HttpWebResponse.Cookies;
             //TODO store cookies
+            var cookies = page.HttpWebResponse.Cookies;
+
             return processed;
         }
 
